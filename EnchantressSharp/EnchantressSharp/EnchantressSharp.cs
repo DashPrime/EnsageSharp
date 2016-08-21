@@ -13,8 +13,7 @@
 
     internal class EnchantressSharp
     {
-        private static readonly Menu Menu = new Menu("Enchantress", "Enchantress", true, "npc_dota_hero_enchantress",
-            true);
+        private static readonly Menu Menu = new Menu("Enchantress", "Enchantress", true, "npc_dota_hero_enchantress", true);
 
         private static Ability enchant, nature, impetus;
         private static bool Active;
@@ -118,8 +117,9 @@
 
             if (Active && me.IsAlive && target.IsAlive && Utils.SleepCheck("activated"))
             {
-                var noBlade = target.HasModifier("modifier_item_blade_mail_reflect");
-                if (target.IsVisible && me.Distance2D(target) <= 2300 && !noBlade)
+                var BladeM = target.HasModifier("modifier_item_blade_mail_reflect");
+
+                if (target.IsVisible && !BladeM)
                 {
                     if (impetus != null && impetus.CanBeCasted() && Menu.Item("Skills").GetValue<AbilityToggler>().IsEnabled(impetus.Name) && Utils.SleepCheck("impetus"))
                     {
@@ -134,11 +134,6 @@
                             Utils.Sleep(200 + Game.Ping, "impetus");
                         }
                         else if (me.CanCast() && me.Distance2D(target) <= attackdragon)
-                        {
-                            impetus.UseAbility(target);
-                            Utils.Sleep(200 + Game.Ping, "impetus");
-                        }
-                        else if (me.CanCast() && me.Distance2D(target) <= 5000)
                         {
                             impetus.UseAbility(target);
                             Utils.Sleep(200 + Game.Ping, "impetus");
@@ -261,15 +256,15 @@
 
                 if (target.IsAlive && !target.IsInvul() && (Game.MousePosition.Distance2D(target) <= 1000 || target.Distance2D(me) <= 600))
                 {
-                    var CheckStun = target.HasModifier("modifier_centaur_hoof_stomp");
-                    var CheckSetka = target.HasModifier("modifier_dark_troll_warlord_ensnare");
+                    var CentaurStun = target.HasModifier("modifier_centaur_hoof_stomp");
+                    var TrollEnsnare = target.HasModifier("modifier_dark_troll_warlord_ensnare");
 
                     for (int i = 0; i < Neutral.Count(); i++)
                     {
                         if (Neutral[i].Name == "npc_dota_neutral_dark_troll_warlord")
                         {
                             if (target.Position.Distance2D(Neutral[i].Position) < 550 &&
-                                (!CheckSetka || !CheckStun || !target.IsHexed() || !target.IsStunned()) &&
+                                (!TrollEnsnare || !CentaurStun || !target.IsHexed() || !target.IsStunned()) &&
                                 Neutral[i].Spellbook.SpellQ.CanBeCasted() &&
                                 Utils.SleepCheck(Neutral[i].Handle.ToString() + "warlord"))
                             {
@@ -297,7 +292,7 @@
                         else if (Neutral[i].Name == "npc_dota_neutral_centaur_khan")
                         {
                             if (target.Position.Distance2D(Neutral[i].Position) < 200 &&
-                                (!CheckSetka || !CheckStun || !target.IsHexed() || !target.IsStunned()) &&
+                                (!TrollEnsnare || !CentaurStun || !target.IsHexed() || !target.IsStunned()) &&
                                 Neutral[i].Spellbook.SpellQ.CanBeCasted() &&
                                 Utils.SleepCheck(Neutral[i].Handle.ToString() + "centaur"))
                             {
@@ -375,7 +370,7 @@
                         else if (Neutral[i].Name == "npc_dota_neutral_mud_golem")
                         {
                             if (target.Position.Distance2D(Neutral[i].Position) < 850 &&
-                                (!CheckSetka || !CheckStun || !target.IsHexed() || !target.IsStunned())
+                                (!TrollEnsnare || !CentaurStun || !target.IsHexed() || !target.IsStunned())
                                 && Neutral[i].Spellbook.SpellQ.CanBeCasted() &&
                                 Utils.SleepCheck(Neutral[i].Handle.ToString() + "golem"))
                             {
